@@ -32,6 +32,8 @@ pip
 
 ### Required NLTK Data
 Uncomment and run these lines in `app.py` the first time:
+
+
 nltk.download('averaged_perceptron_tagger_eng')
 nltk.download('maxent_ne_chunker_tab')
 nltk.download('words')
