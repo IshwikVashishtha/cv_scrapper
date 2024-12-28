@@ -28,7 +28,6 @@ pip
 1. Clone the repository: https://github.com/IshwikVashishtha/cv_scrapper.git
 
 2. Install required dependencies:
-   bash
    pip install -r requirements.txt
 
 ### Required NLTK Data
