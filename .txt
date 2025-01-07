@@ -1,0 +1,14 @@
+# First ensure you're on the main branch
+git checkout main
+
+# Pull the latest changes from remote to avoid conflicts
+git pull origin main
+
+# Add your changes
+git add merger.py
+
+# Commit your changes
+git commit -m "Add PDF merger with first page only and named destination fix"
+
+# Push to main branch
+git push origin main

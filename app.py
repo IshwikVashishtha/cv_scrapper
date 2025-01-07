@@ -1,10 +1,6 @@
-import pdfplumber
+import pdfplumber , traceback , os , re , spacy , nltk 
 import pandas as pd
-import re
 from docx import Document
-import os
-import spacy
-import nltk
 from nameparser import HumanName
 
 # Download required NLTK data
@@ -28,7 +24,6 @@ def extract_text_from_pdf(pdf_path):
                 text_by_page.append(text or '')
     except Exception as e:
         print(f"Error in PDF extraction: {str(e)}")
-        import traceback
         print(traceback.format_exc())
     return text_by_page
 
@@ -99,12 +94,12 @@ def extract_document_data(file_path):
             print(f"Found emails: {emails}")
             print(f"Found phones: {phones}")
             
-            if candidate_name or emails or phones:
+            if candidate_name or (emails and phones):
                 person_data = {
                     'Name': candidate_name,
                     'Email': emails[0] if emails else '',
                     'Phone': phones[0] if phones else '',
-                    'Found_On_Page': page_num  # Adding page number reference
+                    'Found_On_Page': page_num  # page number reference
                 }
                 data.append(person_data)
                 print(f"Added data: {person_data}")
@@ -124,23 +119,23 @@ def extract_document_data(file_path):
         }
         
         for entry in data:
-            # If we find a name, use it
+            # If we find a name,we will use it
             if entry['Name'] and entry['Name'] not in seen_names:
                 current_data['Name'] = entry['Name']
                 current_data['Name_Found_On_Page'] = entry['Found_On_Page']
                 seen_names.add(entry['Name'])
             
-            # Add email if we don't have one yet
+            # Adding email if we don't have one yet
             if entry['Email'] and not current_data['Email']:
                 current_data['Email'] = entry['Email']
                 current_data['Email_Found_On_Page'] = entry['Found_On_Page']
             
-            # Add phone if we don't have one yet
+            # Adding phone if we don't have one yet
             if entry['Phone'] and not current_data['Phone']:
                 current_data['Phone'] = entry['Phone']
                 current_data['Phone_Found_On_Page'] = entry['Found_On_Page']
             
-            # If we have all the data, add it to processed_data
+            # If we have all the data, adding it to processed_data
             if current_data['Name'] and (current_data['Email'] or current_data['Phone']):
                 processed_data.append(current_data.copy())
                 # Reset current_data but keep the name
@@ -183,7 +178,9 @@ def extract_candidate_name(text):
         
         # Standard name formats
         r'^([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})$',
-        r'([A-Z][a-z]+\s+[A-Z]\.\s+[A-Z][a-z]+)',
+        r'(^[A-Z]+ [A-Z]$)',
+        r'(^[A-Z]+ [A-Z]+ [A-Z]$)',
+        r'([A-Z][a-z]+\s+[A-Z]\.\s+[A-Z][a-z]+)'
         
         # Complex name formats
         r'([A-Z][a-z]+(?:\s+(?:van|de|der|den|das|dos|das|do|da|los|la|le|von|van)\s+[A-Z][a-z]+)+)',
@@ -294,12 +291,12 @@ def save_to_excel(data, output_path):
     df = df[column_order]
     
     # Removeing duplicates 
-    df = df.drop_duplicates(subset=['Name', 'Email', 'Phone'], keep='first')
+    df = df.drop_duplicates(subset=['Email', 'Phone'], keep='first')
     
-    # Remove rows where all fields are empty
+    # Removing rows where all fields are empty
     df = df.dropna(subset=['Name', 'Email', 'Phone'], how='all')
     
-    # Sort by Name
+    # Sorting by Name
     df = df.sort_values('Name')
     
     # Save to Excel
