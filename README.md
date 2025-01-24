@@ -47,7 +47,7 @@ python -m spacy download en_core_web_sm
 
 ## Project Structure
 
-cv_scrapper/
+cv_scrapper/ 
 │
 ├── input/ # Place individual PDF files here
 ├── pdf/ # Contains merged PDF output
