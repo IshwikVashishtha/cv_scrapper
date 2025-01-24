@@ -49,13 +49,13 @@ python -m spacy download en_core_web_sm
 
 cv_scrapper/ 
 │
-├── input/ # Place individual PDF files here
-├── pdf/ # Contains merged PDF output
-├── doc/ # Place Word documents here
-├── output/ # Excel output directory
+ ├── input/ # Place individual PDF files here
+ ├── pdf/ # Contains merged PDF output
+ ├── doc/ # Place Word documents here
+ ├── output/ # Excel output directory
 │
 ├── app.py # Main application file
-├── merger.py # PDF merger utility
+├── merger.py # PDF merger utility 
 ├── requirements.txt # Project dependencies
 └── README.md # This file
 
